@@ -367,11 +367,18 @@ def enemy_movement():
                     # Se bateu na parede, então inverte a direção da matriz
                     # Altera direção para direita
                     if enemies[row][column].x <= 0:
+
                         enemy_direction = 1
                         inverted = True  # Altera direção para esquerda
                     elif enemies[row][column].x + enemies[row][column].width >= window.width:
                         enemy_direction = -1
                         inverted = True
+                        for lists in enemies:
+                            for enem in lists:
+                                try:
+                                    enem.y+=35
+                                except:
+                                    pass
 
 
 def bullet_ship_collision():
