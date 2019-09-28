@@ -2,9 +2,9 @@
 
 import time
 import random
-from PPlay.gameimage import *
-from PPlay.sprite import *
-from PPlay.window import *
+from game_files.PPlay.gameimage import *
+from game_files.PPlay.sprite import *
+from game_files.PPlay.window import *
 
 
 random.seed()
@@ -14,7 +14,7 @@ GAME_STATE = 0
 
 fase = 0
 
-difficulty = 1
+difficulty = 1.25
 GAME_SPEED = 1 * difficulty
 # Largura da janela
 width = 640
@@ -76,7 +76,7 @@ background_02.y = -background_02.height
 # Velocidade de rolagem
 background_roll_speed = 50
 # Velocidade dos inimigos
-enemy_speed = 100
+enemy_speed = 40
 
 # Direção dos inimigos
 enemy_direction = 1  # [baixo]
@@ -324,7 +324,7 @@ def bullet_movement():
     for b in bullets:
 
         # Atualiza a sua posição, baseado em sua direção
-        b.move_y(200 * b.direction * window.delta_time() * GAME_SPEED * difficulty)
+        b.move_y( b.direction * window.delta_time() * GAME_SPEED * difficulty * 75)
 
         # Verifica se saiu da tela e, caso tenha saído, destrói o projétil
         if b.y < -b.height or b.y > window.height + b.height:
@@ -339,12 +339,13 @@ def enemy_movement():
     # Acessando variáveis globais
     global enemy_direction
     global enemy_speed
+    global difficulty
 
     # Cria variável de controle
     inverted = False
 
     # Calcula a nova posição da matriz de inimigos
-    new_position = enemy_speed * enemy_direction * window.delta_time() * GAME_SPEED
+    new_position = difficulty*enemy_speed * enemy_direction * window.delta_time() * GAME_SPEED
 
     # Percorre toda a matriz de inimigos
     for row in range(matrix_x):
@@ -552,10 +553,10 @@ while True:
     # Apaga a tela completamente
     window.set_background_color(background_color)
 
-    scrolling(background_01, background_02, background_roll_speed)
+    scrolling(background_01, background_02, background_roll_speed*difficulty)
 
     cont +=1
-    if cont>100:
+    if cont>10:
         cont =0
         texto = str(int(1/window.delta_time()))
     if window.delta_time()>0 and FPS ==True:
