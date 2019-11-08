@@ -82,7 +82,7 @@ enemy_speed = 40
 enemy_direction = 1  # [baixo]
 
 
-
+ovni = None
 bullets = []
 
 enemies = [[0 for x in range(4)] for x in range(8)]
@@ -131,6 +131,19 @@ def win():
             fase = 0
             restart_window()
 
+
+def try_ovni():
+    if random.randint(0,10000 <= 5):
+        enemy = Sprite("Imagens/enemy/ovni.png")
+
+        enemy.set_position(-50, 10)
+        # enemy.height = 100
+        # enemy.width = enemy.height
+
+        enemy.direction = 1
+        return enemy
+    else:
+        return None
 
 
 def spawn_enemy(i, j, enemy_matrix):
@@ -570,6 +583,11 @@ while True:
     # jogo.
     if GAME_STATE == 0:
         menuFade.draw()
+        try:
+            with open("high.txt", "r") as hs:
+                highscore = int(hs.read())
+        except:
+            pass
 
         if mouseMenu(exit):
             exit.draw()
@@ -619,9 +637,30 @@ while True:
 
         # Verifica colisões entre projéteis
         bullet_bullet_collision()
-
+        try:
+            if ovni is None:
+                ovni = try_ovni()
+            else:
+                if ovni is not None:
+                    ovni.x += 200 * window.delta_time()
+                    # for b in bullets:
+                    #     if b.collided(ovni):
+                    #         bullets.remove(b)
+                    #         player.score += 5000 * difficulty
+                    #         ovni = None
+                    #         break
+                    if ovni.x > window.width:
+                        ovni= None
+                        continue
+                    else:
+                        ovni.draw()
+        except:
+            pass
         if player.score > highscore:
             highscore = player.score
+            with open("high.txt", "w+") as hs:
+                hs.seek(0)
+                hs.write(str(int(highscore)))
         ## Renderiza todos os dados na tela ##
         draw()
 
